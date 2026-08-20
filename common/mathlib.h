@@ -79,10 +79,15 @@ typedef union DLONG {
 
 extern DLONG	dlong;
 
-#ifdef _WIN32
+// Floating point control helpers
+// Modern MSVC (and x64) do not support inline asm in the same way as legacy compilers.
+// Provide guarded implementations: use the legacy asm version only for MSVC x86 builds.
+
+#if defined(_WIN32) && defined(_MSC_VER) && defined(_M_IX86)
+// x86 MSVC: keep the original inline assembly behavior
 void __inline set_fpu_cw(void)
 {
-_asm	
+	_asm	
 	{		wait
 			fnstcw	old_cw
 			wait
@@ -107,9 +112,31 @@ void __inline restore_fpu_cw(void)
 {
 	_asm	fldcw	old_cw
 }
+
+#elif defined(_WIN32) && defined(_MSC_VER) && defined(_M_X64)
+// x64 MSVC: no inline asm. Provide safe equivalents using CRT functions.
+#include <math.h>
+static inline void set_fpu_cw(void)
+{
+	// No-op on x64; control word handling is platform dependent.
+}
+
+static inline int quick_ftol(float f)
+{
+	// Use lrintf which rounds to nearest; conservative and consistent on x64
+	return (int)lrintf(f);
+}
+
+static inline void restore_fpu_cw(void)
+{
+	// No-op on x64
+}
+
 #else
+// Other platforms (non-MSVC or non-Windows): use libc fallbacks
+#include <math.h>
 #define set_fpu_cw() /* */
-#define quick_ftol(f) ftol(f)
+#define quick_ftol(f) ((int)floor((f) + 0.5f))
 #define restore_fpu_cw() /* */
 #endif
 

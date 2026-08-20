@@ -1,7 +1,9 @@
 #include "hud.h"
+#include "util_vector.h"
 #include "cl_util.h"
 #include "parsemsg.h"
 #include "entity_state.h"
+#include "APIProxy.h"
 #include "hud_esp.h"
 #include "hud_radar.h"
 #include <math.h>

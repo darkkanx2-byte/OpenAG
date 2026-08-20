@@ -12,8 +12,10 @@
 *   without written permission from Valve LLC.
 *
 ****/
-//			
+//				
 //  hud.h
+
+#pragma once
 //
 // class CHud declaration
 //

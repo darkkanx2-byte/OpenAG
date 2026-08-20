@@ -15,6 +15,7 @@
 //
 // cl_util.h
 //
+#pragma once
 
 #include "cvardef.h"
 #include "net_api.h"

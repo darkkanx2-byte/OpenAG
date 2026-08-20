@@ -1,0 +1,71 @@
+
+# 5. Aimbot + Triggerbot + No Recoil Header (hud_aimbot.h)
+hud_aimbot_h = '''#pragma once
+#include "hud.h"
+
+class CHudAimbot : public CHudBase
+{
+public:
+    int Init(void) override;
+    int VidInit(void) override;
+    int Draw(float flTime) override;
+    void Think(void) override;
+    void Reset(void) override;
+    
+    // CL_CreateMove hook'u için
+    void CL_CreateMove(float frametime, struct usercmd_s *cmd, int active);
+
+private:
+    // CVAR'lar
+    cvar_t* m_pCvarAimbot;
+    cvar_t* m_pCvarAimbotFOV;
+    cvar_t* m_pCvarAimbotSmooth;
+    cvar_t* m_pCvarAimbotKey;
+    cvar_t* m_pCvarAimbotBone;
+    cvar_t* m_pCvarAimbotTeamCheck;
+    
+    cvar_t* m_pCvarTriggerbot;
+    cvar_t* m_pCvarTriggerbotDelay;
+    cvar_t* m_pCvarTriggerbotKey;
+    cvar_t* m_pCvarTriggerbotHeadOnly;
+    
+    cvar_t* m_pCvarNoRecoil;
+    cvar_t* m_pCvarNoRecoilMode;  // 0 = off, 1 = punch reset, 2 = compensation
+    
+    // Durum
+    bool m_bAimbotKeyPressed;
+    bool m_bTriggerbotKeyPressed;
+    float m_flTriggerDelay;
+    float m_flNextTrigger;
+    
+    // Aimbot hedef
+    int m_iTargetIndex;
+    vec3_t m_vecTargetAngle;
+    
+    // Yardımcı fonksiyonlar
+    void RunAimbot(usercmd_t* cmd);
+    void RunTriggerbot(usercmd_t* cmd);
+    void RunNoRecoil(usercmd_t* cmd);
+    
+    bool FindBestTarget(vec3_t& outAngle, int& outIndex);
+    bool IsValidTarget(cl_entity_t* player);
+    float GetFOV(const vec3_t& viewangles, const vec3_t& aimAngle);
+    void SmoothAim(vec3_t& current, const vec3_t& target, float smooth);
+    void CalcAngle(const vec3_t& src, const vec3_t& dst, vec3_t& angles);
+    void ClampAngles(vec3_t& angles);
+    void NormalizeAngles(vec3_t& angles);
+    
+    vec3_t GetTargetBone(cl_entity_t* player, int bone);
+    vec3_t GetHeadPosition(cl_entity_t* player);
+    
+    // Trace
+    bool IsVisible(const vec3_t& from, const vec3_t& to);
+};
+
+extern CHudAimbot g_HudAimbot;
+'''
+
+with open('/mnt/agents/output/hud_aimbot.h', 'w') as f:
+    f.write(hud_aimbot_h)
+
+print("✅ hud_aimbot.h oluşturuldu")

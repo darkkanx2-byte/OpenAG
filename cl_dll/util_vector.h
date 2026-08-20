@@ -13,6 +13,8 @@
 *
 ****/
 //  Vector.h
+
+#pragma once
 // A subset of the extdll.h in the project HL Entity DLL
 //
 

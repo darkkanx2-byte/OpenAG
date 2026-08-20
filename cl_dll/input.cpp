@@ -5,7 +5,7 @@
 // Quake is a trademark of Id Software, Inc., (c) 1996 Id Software, Inc. All
 // rights reserved.
 #include "hud.h"
-#include "hud_aimbot.h"
+#include "cl_util.h"
 #include "cl_util.h"
 #include "camera.h"
 extern "C"
@@ -749,9 +749,6 @@ void CL_DLLEXPORT CL_CreateMove ( float frametime, struct usercmd_s *cmd, int ac
 		CL_AdjustAngles ( frametime, viewangles );
 
 		memset (cmd, 0, sizeof(*cmd));
-
-		// Give aimbot a chance to modify the command before we set view angles
-		g_HudAimbot.CL_CreateMove(frametime, cmd, active);
 
 		gEngfuncs.SetViewAngles( (float *)viewangles );
 

@@ -2,5 +2,8 @@
 #include "hud_esp.h"
 #include "hud_radar.h"
 
-DummyHudESP g_HudESP;
-DummyHudRadar g_HudRadar;
+// Define the symbols using the types exposed by the headers. The headers
+// alias DummyHudESP/ DummyHudRadar to CHudESP/CHudRadar where appropriate,
+// so defining CHudESP/CHudRadar covers both variations across translation units.
+CHudESP g_HudESP;
+CHudRadar g_HudRadar;

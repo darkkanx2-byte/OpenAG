@@ -155,7 +155,9 @@ void ESPOverlay::DrawRadar(Gdiplus::Graphics* g, const ESPSharedData& data)
 		const auto& rp = data.radar.radarPlayers[i];
 		float rx = centerX + rp.relativeX * (radarSize / 2.0f); float ry = centerY - rp.relativeY * (radarSize / 2.0f);
 		Gdiplus::Color color = rp.isEnemy ? Gdiplus::Color(255, 255, 50, 50) : Gdiplus::Color(255, 50, 255, 50);
-		Gdiplus::SolidBrush playerBrush(color); g->FillEllipse(&playerBrush, rx - 3, ry - 3, 6, 6);
+		Gdiplus::SolidBrush playerBrush(color);
+		g->FillEllipse(&playerBrush,
+			(Gdiplus::REAL)(rx - 3), (Gdiplus::REAL)(ry - 3), (Gdiplus::REAL)6, (Gdiplus::REAL)6);
 		float yaw = rp.yaw * (3.14159f / 180.0f); float endX = rx + 8 * sinf(yaw); float endY = ry - 8 * cosf(yaw);
 		Gdiplus::Pen dirPen(color, 1.5f); g->DrawLine(&dirPen, rx, ry, endX, endY);
 	}

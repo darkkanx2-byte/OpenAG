@@ -101,25 +101,6 @@ add_subdirectory(pm_shared)
 add_subdirectory(public)
 
 get_property(SOURCE_FILES GLOBAL PROPERTY SOURCE_FILES)
-if(NOT SOURCE_FILES)
-	message(WARNING "Global SOURCE_FILES property is empty — falling back to recursive glob of common source directories (only .c/.cpp)")
-	file(GLOB_RECURSE _FALLBACK_SOURCES
-		"${CMAKE_CURRENT_SOURCE_DIR}/cl_dll/*.cpp"
-		"${CMAKE_CURRENT_SOURCE_DIR}/cl_dll/*.c"
-		"${CMAKE_CURRENT_SOURCE_DIR}/dlls/*.cpp"
-		"${CMAKE_CURRENT_SOURCE_DIR}/dlls/*.c"
-		"${CMAKE_CURRENT_SOURCE_DIR}/common/*.cpp"
-		"${CMAKE_CURRENT_SOURCE_DIR}/common/*.c"
-		"${CMAKE_CURRENT_SOURCE_DIR}/game_shared/*.cpp"
-		"${CMAKE_CURRENT_SOURCE_DIR}/game_shared/*.c"
-		"${CMAKE_CURRENT_SOURCE_DIR}/pm_shared/*.cpp"
-		"${CMAKE_CURRENT_SOURCE_DIR}/pm_shared/*.c"
-		"${CMAKE_CURRENT_SOURCE_DIR}/public/*.cpp"
-		"${CMAKE_CURRENT_SOURCE_DIR}/public/*.c"
-	)
-	list(REMOVE_DUPLICATES _FALLBACK_SOURCES)
-	set(SOURCE_FILES ${_FALLBACK_SOURCES})
-endif()
 
 set(SOURCE_FILES ${SOURCE_FILES} "${CMAKE_BINARY_DIR}/current_version.h")
 list(LENGTH SOURCE_FILES _SOURCE_FILES_COUNT)

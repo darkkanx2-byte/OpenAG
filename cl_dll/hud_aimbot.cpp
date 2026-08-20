@@ -1,10 +1,17 @@
 #include "hud.h"
+#include "util_vector.h"
 #include "cl_util.h"
 #include "parsemsg.h"
 #include "entity_state.h"
 #include "hud_aimbot.h"
 #include "hud_radar.h"
 #include <math.h>
+
+#ifndef PITCH
+#define PITCH 0
+#define YAW 1
+#define ROLL 2
+#endif
 
 CHudAimbot g_HudAimbot;
 

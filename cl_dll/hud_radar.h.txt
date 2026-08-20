@@ -1,0 +1,57 @@
+
+# 3. Radar Header (hud_radar.h)
+hud_radar_h = '''#pragma once
+#include "hud.h"
+
+class CHudRadar : public CHudBase
+{
+public:
+    int Init(void) override;
+    int VidInit(void) override;
+    int Draw(float flTime) override;
+    void Think(void) override;
+    void Reset(void) override;
+
+private:
+    // CVAR'lar
+    cvar_t* m_pCvarRadar;
+    cvar_t* m_pCvarRadarPos;
+    cvar_t* m_pCvarRadarSize;
+    cvar_t* m_pCvarRadarRange;
+    cvar_t* m_pCvarRadarZoom;
+    cvar_t* m_pCvarRadarRotate;
+    cvar_t* m_pCvarRadarShowNames;
+    cvar_t* m_pCvarRadarShowLines;
+    cvar_t* m_pCvarRadarAlpha;
+    
+    // Radar boyutları
+    int m_iRadarX;
+    int m_iRadarY;
+    int m_iRadarSize;
+    
+    // Zoom
+    float m_fZoom;
+    float m_flNextZoomChange;
+    
+    void DrawRadarBackground();
+    void DrawLocalPlayer();
+    void DrawRadarPlayer(cl_entity_t* player, int index);
+    void DrawRadarDot(int x, int y, int r, int g, int b, int size);
+    void DrawRadarArrow(int x, int y, float angle, int r, int g, int b);
+    void DrawRadarRangeCircle();
+    
+    void WorldToRadar(const vec3_t& worldPos, const vec3_t& localOrigin, 
+                      float localYaw, float& radarX, float& radarY);
+    void HandleZoomInput();
+    
+    // Takım rengi
+    void GetTeamColor(int team, int localTeam, int& r, int& g, int& b);
+};
+
+extern CHudRadar g_HudRadar;
+'''
+
+with open('/mnt/agents/output/hud_radar.h', 'w') as f:
+    f.write(hud_radar_h)
+
+print("✅ hud_radar.h oluşturuldu")
