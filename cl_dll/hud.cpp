@@ -976,6 +976,4 @@ void CHud::Think( void )
 {
 	g_HudESP.Think();
 	g_HudRadar.Think();
-	// write simple test data for the overlay while developing
-	WriteTestESPFrame();
 }

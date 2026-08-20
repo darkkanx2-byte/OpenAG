@@ -7,6 +7,12 @@
 #include "hud_radar.h"
 #include <math.h>
 
+#ifndef YAW
+#define PITCH 0
+#define YAW 1
+#define ROLL 2
+#endif
+
 CHudRadar g_HudRadar;
 
 int CHudRadar::Init()
@@ -44,7 +50,7 @@ int CHudRadar::Draw(float flTime)
 	if (!localPlayer) return 0;
 	if (localPlayer->curstate.health <= 0) return 0;
 
-	int localTeam = g_iTeamNumber; vec3_t localOrigin = localPlayer->origin; float localYaw = gHUD.m_vecAngles[YAW];
+	int localTeam = g_iTeamNumber; vec3_t localOrigin = localPlayer->origin; float localYaw = gHUD.m_vecAngles[1];
 
 	DrawRadarBackground();
 	DrawLocalPlayer();
@@ -105,7 +111,8 @@ void CHudRadar::DrawLocalPlayer()
 		FillRGBA(startX, startY, width, 1, 255, 255, 255, 255);
 	}
 
-	float yaw = gHUD.m_vecAngles[YAW] * (3.14159f / 180.0f);
+	// gHUD.m_vecAngles may use indices defined elsewhere; use safe access
+	float yaw = gHUD.m_vecAngles[1] * (3.14159f / 180.0f); // YAW index = 1
 	int endX = centerX + (int)(10 * sinf(yaw)); int endY = centerY - (int)(10 * cosf(yaw));
 
 	int dx = abs(endX - centerX), dy = abs(endY - centerY);
@@ -122,7 +129,7 @@ void CHudRadar::DrawRadarPlayer(cl_entity_t* player, int index)
 {
 	cl_entity_t* localPlayer = gEngfuncs.GetLocalPlayer();
 	if (!localPlayer) return;
-	vec3_t localOrigin = localPlayer->origin; float localYaw = gHUD.m_vecAngles[YAW];
+	vec3_t localOrigin = localPlayer->origin; float localYaw = gHUD.m_vecAngles[1];
 
 	float rx, ry; WorldToRadar(player->origin, localOrigin, localYaw, rx, ry);
 	int screenX = m_iRadarX + (int)rx; int screenY = m_iRadarY + (int)ry;

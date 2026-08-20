@@ -103,7 +103,9 @@ inline int SPR_Width( HSPRITE x, int f )	{ return gEngfuncs.pfnSPR_Width(x, f); 
 
 template<typename T, size_t N>
 char (&ArraySizeHelper(T (&)[N]))[N];
+#ifndef ARRAYSIZE
 #define ARRAYSIZE(x) sizeof(ArraySizeHelper(x))
+#endif
 
 #define max(a, b)  (((a) > (b)) ? (a) : (b))
 #define min(a, b)  (((a) < (b)) ? (a) : (b))

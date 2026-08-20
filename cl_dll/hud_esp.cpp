@@ -1,11 +1,17 @@
-#include "hud.h"
 #include "util_vector.h"
+#include "hud.h"
 #include "cl_util.h"
 #include "parsemsg.h"
 #include "entity_state.h"
 #include "APIProxy.h"
 #include "hud_esp.h"
 #include "hud_radar.h"
+#include "../common/triangleapi.h"
+#ifndef YAW
+#define PITCH 0
+#define YAW 1
+#define ROLL 2
+#endif
 #include <math.h>
 
 CHudESP g_HudESP;
@@ -189,15 +195,15 @@ void CHudESP::DrawPlayerESP(cl_entity_t* player, int index)
 void CHudESP::Draw3DBox(vec3_t origin, int r, int g, int b, int alpha, float height)
 {
 	float width = 32.0f;
-	vec3_t corners[8];
-	corners[0] = origin + vec3_t(-width/2, -width/2, 0);
-	corners[1] = origin + vec3_t(width/2, -width/2, 0);
-	corners[2] = origin + vec3_t(width/2, width/2, 0);
-	corners[3] = origin + vec3_t(-width/2, width/2, 0);
-	corners[4] = origin + vec3_t(-width/2, -width/2, height);
-	corners[5] = origin + vec3_t(width/2, -width/2, height);
-	corners[6] = origin + vec3_t(width/2, width/2, height);
-	corners[7] = origin + vec3_t(-width/2, width/2, height);
+	Vector corners[8];
+	corners[0] = origin + Vector(-width/2.0f, -width/2.0f, 0.0f);
+	corners[1] = origin + Vector(width/2.0f, -width/2.0f, 0.0f);
+	corners[2] = origin + Vector(width/2.0f, width/2.0f, 0.0f);
+	corners[3] = origin + Vector(-width/2.0f, width/2.0f, 0.0f);
+	corners[4] = origin + Vector(-width/2.0f, -width/2.0f, height);
+	corners[5] = origin + Vector(width/2.0f, -width/2.0f, height);
+	corners[6] = origin + Vector(width/2.0f, width/2.0f, height);
+	corners[7] = origin + Vector(-width/2.0f, width/2.0f, height);
 
 	float sx[8], sy[8]; bool visible[8];
 	for (int i = 0; i < 8; i++) visible[i] = WorldToScreen(corners[i], sx[i], sy[i]);
@@ -278,7 +284,11 @@ void CHudESP::DrawHeadDot(int x, int y, int r, int g, int b)
 
 bool CHudESP::WorldToScreen(const vec3_t& worldPos, float& screenX, float& screenY)
 {
-	float screen[3]; int result = gEngfuncs.pTriAPI->WorldToScreen((float*)worldPos, screen);
+	float screen[3];
+	float w[3];
+	// worldPos may be Vector; copy to raw float array for the triangle API
+	worldPos.CopyToArray(w);
+	int result = gEngfuncs.pTriAPI->WorldToScreen(w, screen);
 	if (result != 0) return false;
 	screenX = XPROJECT(screen[0]); screenY = YPROJECT(screen[1]);
 	return (screenX >= 0 && screenX <= ScreenWidth && screenY >= 0 && screenY <= ScreenHeight);
