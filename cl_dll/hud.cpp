@@ -29,6 +29,7 @@
 #include "hud_servers.h"
 #include "vgui_int.h"
 #include "vgui_TeamFortressViewport.h"
+#include "esp_shared.h"
 
 #include "demo.h"
 #include "demo_api.h"
@@ -975,4 +976,6 @@ void CHud::Think( void )
 {
 	g_HudESP.Think();
 	g_HudRadar.Think();
+	// write simple test data for the overlay while developing
+	WriteTestESPFrame();
 }

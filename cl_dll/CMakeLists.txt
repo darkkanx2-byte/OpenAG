@@ -140,4 +140,5 @@ add_sources(
 	voice_status.cpp
 	wrect.h
 	hud_stubs.cpp
+	esp_shared.cpp
 )
