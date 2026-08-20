@@ -37,62 +37,15 @@ float HUD_GetFOV( void );
 
 extern cvar_t *sensitivity;
 
-// Think
+// Duplicate Think removed: use the implementation in hud.cpp
+#if 0
+/*
 void CHud::Think(void)
 {
-	m_scrinfo.iSize = sizeof(m_scrinfo);
-	GetScreenInfo(&m_scrinfo);
-
-	m_Rainbow.Think();
-
-	int newfov;
-	HUDLIST *pList = m_pHudList;
-
-	while (pList)
-	{
-		if (pList->p->m_iFlags & HUD_ACTIVE)
-			pList->p->Think();
-		pList = pList->pNext;
-	}
-
-	newfov = HUD_GetFOV();
-	if ( newfov == 0 )
-	{
-		m_iFOV = default_fov->value;
-	}
-	else
-	{
-		m_iFOV = newfov;
-	}
-
-	// the clients fov is actually set in the client data update section of the hud
-
-	// Set a new sensitivity
-	if ( m_iFOV == default_fov->value )
-	{  
-		// reset to saved sensitivity
-		m_flMouseSensitivity = 0;
-	}
-	else
-	{  
-		// set a new sensitivity that is proportional to the change from the FOV default
-		m_flMouseSensitivity = sensitivity->value * ((float)newfov / (float)default_fov->value) * zoom_sensitivity_ratio->value;
-	}
-
-	// think about default fov
-	if ( m_iFOV == 0 )
-	{  // only let players adjust up in fov,  and only if they are not overriden by something else
-		m_iFOV = max( default_fov->value, 90 );  
-	}
-
-	// Don't change the FOV for HLTV to a constant, use the updated value like when in a normal game
-	/*if ( gEngfuncs.IsSpectateOnly() )
-	{
-		m_iFOV = gHUD.m_Spectator.GetFOV();
-	}*/
-
-	Bench_CheckStart();
+	... (removed duplicate implementation)
 }
+*/
+#endif
 
 // Redraw
 // step through the local data,  placing the appropriate graphics & text as appropriate

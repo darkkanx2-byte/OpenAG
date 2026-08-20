@@ -1,10 +1,21 @@
-cmake_minimum_required(VERSION 3.3)
+cmake_minimum_required(VERSION 3.10)
 
 # Set the SDK according to what discord-rpc uses as the lowest common denominator.
 # Must be a cache variable: https://stackoverflow.com/a/34208904
 set(CMAKE_OSX_DEPLOYMENT_TARGET "10.10" CACHE STRING "Minimum OS X deployment version")
 
 project(OpenAG)
+
+# Set policies to avoid warnings about link-line deduplication and link flag parsing
+if(POLICY CMP0156)
+	cmake_policy(SET CMP0156 NEW)
+endif()
+if(POLICY CMP0181)
+	cmake_policy(SET CMP0181 NEW)
+endif()
+if(POLICY CMP0179)
+	cmake_policy(SET CMP0179 NEW)
+endif()
 
 include("CMake/helpers.cmake")
 
@@ -64,10 +75,10 @@ configure_file(cl_dll/current_version.h.in current_version.h)
 # Add discord-rpc
 set(BUILD_EXAMPLES OFF CACHE BOOL "build discord-rpc examples" FORCE)
 set(CLANG_FORMAT_SUFFIX "-dummy")
-add_subdirectory(external/discord-rpc)
+add_subdirectory(external/discord-cpp)
 
 if(MSVC)
-	target_compile_options(discord-rpc PRIVATE
+	target_compile_options(discord-rpc PRIVATE 
 		/wd4191 # 'reinterpret_cast': unsafe conversion from 'FARPROC' to 'RegSetKeyValueW_T'
 		/wd4571 # Informational: catch(...) semantics changed since Visual C++ 7.1; structured exceptions (SEH) are no longer caught
 		/wd4623 # 'std::_UInt_is_zero': default constructor was implicitly defined as deleted
@@ -90,7 +101,40 @@ add_subdirectory(pm_shared)
 add_subdirectory(public)
 
 get_property(SOURCE_FILES GLOBAL PROPERTY SOURCE_FILES)
+if(NOT SOURCE_FILES)
+	message(WARNING "Global SOURCE_FILES property is empty — falling back to recursive glob of common source directories (only .c/.cpp)")
+	file(GLOB_RECURSE _FALLBACK_SOURCES
+		"${CMAKE_CURRENT_SOURCE_DIR}/cl_dll/*.cpp"
+		"${CMAKE_CURRENT_SOURCE_DIR}/cl_dll/*.c"
+		"${CMAKE_CURRENT_SOURCE_DIR}/dlls/*.cpp"
+		"${CMAKE_CURRENT_SOURCE_DIR}/dlls/*.c"
+		"${CMAKE_CURRENT_SOURCE_DIR}/common/*.cpp"
+		"${CMAKE_CURRENT_SOURCE_DIR}/common/*.c"
+		"${CMAKE_CURRENT_SOURCE_DIR}/game_shared/*.cpp"
+		"${CMAKE_CURRENT_SOURCE_DIR}/game_shared/*.c"
+		"${CMAKE_CURRENT_SOURCE_DIR}/pm_shared/*.cpp"
+		"${CMAKE_CURRENT_SOURCE_DIR}/pm_shared/*.c"
+		"${CMAKE_CURRENT_SOURCE_DIR}/public/*.cpp"
+		"${CMAKE_CURRENT_SOURCE_DIR}/public/*.c"
+	)
+	list(REMOVE_DUPLICATES _FALLBACK_SOURCES)
+	set(SOURCE_FILES ${_FALLBACK_SOURCES})
+endif()
+
 set(SOURCE_FILES ${SOURCE_FILES} "${CMAKE_BINARY_DIR}/current_version.h")
+list(LENGTH SOURCE_FILES _SOURCE_FILES_COUNT)
+message(STATUS "Collected SOURCE_FILES count=${_SOURCE_FILES_COUNT}")
+if(_SOURCE_FILES_COUNT EQUAL 0)
+	message(FATAL_ERROR "No source files collected for 'client' target. Check that add_subdirectory(...) calls populated SOURCE_FILES or that fallback globs match patterns.")
+else()
+	# Print first few files for diagnostics
+	list(GET SOURCE_FILES 0 _first_file)
+	message(STATUS "Example source file[0]=${_first_file}")
+	if(_SOURCE_FILES_COUNT GREATER 1)
+		list(GET SOURCE_FILES 1 _second_file)
+		message(STATUS "Example source file[1]=${_second_file}")
+	endif()
+endif()
 
 set(CMAKE_SHARED_LIBRARY_PREFIX  "")
 
@@ -116,6 +160,8 @@ if(MSVC)
 	target_compile_options(client PRIVATE
 		# Disable some warnings which would take too much effort to fix
 		/wd4018 # Signed/unsigned mismatch
+		/wd4267 # 'size_t' to smaller integer conversion
+		/wd4865 # enum type change warning
 		/wd4838 # Conversion from double to float
 		/wd4996 # The POSIX name for this item is deprecated
 		)

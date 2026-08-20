@@ -1,7 +1,12 @@
 function(add_sources)
 	foreach(SOURCE_FILE ${ARGN})
-		set_property(GLOBAL APPEND PROPERTY SOURCE_FILES
-			"${CMAKE_CURRENT_SOURCE_DIR}/${SOURCE_FILE}")
+		set(_ABS_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${SOURCE_FILE}")
+		if(EXISTS "${_ABS_PATH}")
+			set_property(GLOBAL APPEND PROPERTY SOURCE_FILES
+				"${_ABS_PATH}")
+		else()
+			message(WARNING "add_sources: skipping missing file ${_ABS_PATH}")
+		endif()
 	endforeach(SOURCE_FILE)
 endfunction(add_sources)
 

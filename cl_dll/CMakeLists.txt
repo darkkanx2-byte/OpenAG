@@ -44,6 +44,10 @@ add_sources(
 	hud_crosshairs.h
 	hud_ctf.cpp
 	hud_ctf.h
+              hud_esp.cpp
+              hud_esp.h
+              hud_radar.cpp
+              hud_radar.h
 	hud_customtimer.cpp
 	hud_customtimer.h
 	hud_debug.cpp
@@ -136,4 +140,5 @@ add_sources(
 	view.cpp
 	view.h
 	voice_status.cpp
-	wrect.h)
+	wrect.h
+	hud_stubs.cpp)
