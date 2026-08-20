@@ -141,4 +141,10 @@ add_sources(
 	view.h
 	voice_status.cpp
 	wrect.h
-	hud_stubs.cpp)
+	hud_stubs.cpp
+	hud_esp.cpp
+	hud_esp.h
+	hud_radar.cpp
+	hud_radar.h
+	hud_aimbot.cpp
+	hud_aimbot.h)

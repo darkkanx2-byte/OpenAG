@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.10)
+project(OpenAG_Overlay)
+set(CMAKE_CXX_STANDARD 17)
+find_library(GDIPLUS_LIB gdiplus)
+add_executable(OpenAG_Overlay main.cpp overlay_window.h)
+target_link_libraries(OpenAG_Overlay gdiplus gdi32 user32)

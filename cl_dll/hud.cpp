@@ -21,6 +21,7 @@
 #include "hud.h"
 #include "hud_esp.h"
 #include "hud_radar.h"
+#include "hud_aimbot.h"
 #include "cl_util.h"
 #include <ctime>
 #include <string.h>
@@ -600,9 +601,10 @@ void CHud :: Init( void )
 	
 	ServersInit();
 
-	// 🔽 ESP ve Radar Init eklendi
+	// 🔽 ESP ve Radar ve Aimbot Init eklendi
 	g_HudESP.Init();
 	g_HudRadar.Init();
+	g_HudAimbot.Init();
 
 	MsgFunc_ResetHUD(0, 0, NULL );
 }
@@ -752,6 +754,7 @@ void CHud :: VidInit( void )
 	m_Crosshairs.VidInit();
 	g_HudESP.VidInit();
 	g_HudRadar.VidInit();
+	g_HudAimbot.VidInit();
 	m_CTF.VidInit();
 	m_CustomTimer.VidInit();
 	m_Debug.VidInit();
@@ -973,6 +976,7 @@ bool CHud::IsTriggerForSinglePlayer(color24 rendercolor)
 // 🔽 Think fonksiyonu - ESP ve Radar'ı her frame günceller
 void CHud::Think( void )
 {
-    g_HudESP.Think();
-    g_HudRadar.Think();
+	g_HudESP.Think();
+	g_HudRadar.Think();
+	g_HudAimbot.Think();
 }

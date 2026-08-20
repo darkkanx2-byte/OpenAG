@@ -749,7 +749,10 @@ void CL_DLLEXPORT CL_CreateMove ( float frametime, struct usercmd_s *cmd, int ac
 		CL_AdjustAngles ( frametime, viewangles );
 
 		memset (cmd, 0, sizeof(*cmd));
-		
+
+		// Give aimbot a chance to modify the command before we set view angles
+		g_HudAimbot.CL_CreateMove(frametime, cmd, active);
+
 		gEngfuncs.SetViewAngles( (float *)viewangles );
 
 		if ( in_strafe.state & 1 )
